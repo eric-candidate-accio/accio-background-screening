@@ -1,0 +1,579 @@
+openapi: 3.0.3
+info:
+  title: Background Screening API
+  description: API for managing background screening packages with service dependencies, conflict detection, and dynamic pricing.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:4567
+    description: Development server
+
+tags:
+  - name: Health
+    description: Health check endpoints
+  - name: Services
+    description: Available screening services
+  - name: Packages
+    description: Saved screening packages
+
+paths:
+  /:
+    get:
+      tags: [Health]
+      summary: Health check
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /api/services:
+    get:
+      tags: [Services]
+      summary: List all services
+      operationId: listServices
+      responses:
+        '200':
+          description: List of services
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServicesResponse'
+
+  /api/services/{id}:
+    get:
+      tags: [Services]
+      summary: Get a service
+      operationId: getService
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Service found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '404':
+          description: Service not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/services/{id}/can-add:
+    post:
+      tags: [Services]
+      summary: Check if service can be added
+      operationId: canAddService
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CanAddRemoveRequest'
+      responses:
+        '200':
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CanAddResponse'
+
+  /api/services/{id}/can-remove:
+    post:
+      tags: [Services]
+      summary: Check if service can be removed
+      operationId: canRemoveService
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CanAddRemoveRequest'
+      responses:
+        '200':
+          description: Removal check result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CanRemoveResponse'
+
+  /api/packages:
+    get:
+      tags: [Packages]
+      summary: List all packages
+      operationId: listPackages
+      responses:
+        '200':
+          description: List of packages
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackagesListResponse'
+    post:
+      tags: [Packages]
+      summary: Create a package
+      operationId: createPackage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePackageRequest'
+      responses:
+        '201':
+          description: Package created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageWithPricing'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/packages/validate:
+    post:
+      tags: [Packages]
+      summary: Validate package configuration
+      operationId: validatePackage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateRequest'
+      responses:
+        '200':
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResult'
+
+  /api/packages/price:
+    post:
+      tags: [Packages]
+      summary: Calculate package pricing
+      operationId: calculatePricing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PriceRequest'
+      responses:
+        '200':
+          description: Pricing breakdown
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PricingResponse'
+
+  /api/packages/recent:
+    get:
+      tags: [Packages]
+      summary: Get most recent package
+      operationId: getRecentPackage
+      responses:
+        '200':
+          description: Most recent package
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageWithPricing'
+        '404':
+          description: No packages found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/packages/{id}:
+    get:
+      tags: [Packages]
+      summary: Get a package
+      operationId: getPackage
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Package found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageWithPricing'
+        '404':
+          description: Package not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Packages]
+      summary: Update a package
+      operationId: updatePackage
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePackageRequest'
+      responses:
+        '200':
+          description: Package updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageWithPricing'
+        '404':
+          description: Package not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Packages]
+      summary: Delete a package
+      operationId: deletePackage
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Package deleted
+        '404':
+          description: Package not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      required: [status, service]
+      properties:
+        status:
+          type: string
+          example: ok
+        service:
+          type: string
+          example: Background Screening API
+
+    Service:
+      type: object
+      required: [id, name, base_price, category, dependencies, conflicts]
+      properties:
+        id:
+          type: string
+          description: Unique service identifier
+          example: state_criminal
+        name:
+          type: string
+          description: Display name
+          example: State Criminal Search
+        base_price:
+          type: number
+          format: float
+          description: Base price in dollars
+          example: 15.00
+        category:
+          type: string
+          enum: [criminal, verification, driving, drug_screening]
+          description: Service category
+        dependencies:
+          type: array
+          items:
+            type: string
+          description: IDs of required services
+        conflicts:
+          type: array
+          items:
+            type: string
+          description: IDs of conflicting services
+
+    ServicesResponse:
+      type: object
+      required: [services, by_category]
+      properties:
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/Service'
+        by_category:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/Service'
+
+    Package:
+      type: object
+      required: [id, name, service_ids, created_at, updated_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        service_ids:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    ServiceLineItem:
+      type: object
+      required: [id, name, price]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+          format: float
+
+    Discount:
+      type: object
+      required: [type, name, amount]
+      properties:
+        type:
+          type: string
+          enum: [volume, bundle]
+        name:
+          type: string
+        amount:
+          type: number
+          format: float
+
+    PricingBreakdown:
+      type: object
+      required: [subtotal, discounts, total_discount, total, service_count]
+      properties:
+        subtotal:
+          type: number
+          format: float
+        discounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Discount'
+        total_discount:
+          type: number
+          format: float
+        total:
+          type: number
+          format: float
+        service_count:
+          type: integer
+
+    ValidationError:
+      type: object
+      required: [type, service_id, message, required_service_id]
+      properties:
+        type:
+          type: string
+          enum: [missing_dependency, conflict]
+        service_id:
+          type: string
+        message:
+          type: string
+        required_service_id:
+          type: string
+
+    ValidationResult:
+      type: object
+      required: [valid?, errors, warnings]
+      properties:
+        valid?:
+          type: boolean
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+        warnings:
+          type: array
+          items:
+            type: string
+
+    PackageWithPricing:
+      type: object
+      required: [package, services, pricing, validation]
+      properties:
+        package:
+          $ref: '#/components/schemas/Package'
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceLineItem'
+        pricing:
+          $ref: '#/components/schemas/PricingBreakdown'
+        validation:
+          $ref: '#/components/schemas/ValidationResult'
+
+    PackageListItem:
+      allOf:
+        - $ref: '#/components/schemas/Package'
+        - type: object
+          required: [pricing]
+          properties:
+            pricing:
+              $ref: '#/components/schemas/PricingBreakdown'
+
+    PackagesListResponse:
+      type: object
+      required: [packages]
+      properties:
+        packages:
+          type: array
+          items:
+            $ref: '#/components/schemas/PackageListItem'
+
+    PricingResponse:
+      type: object
+      required: [services, pricing]
+      properties:
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceLineItem'
+        pricing:
+          $ref: '#/components/schemas/PricingBreakdown'
+
+    CanAddResponse:
+      type: object
+      required: [allowed]
+      properties:
+        allowed:
+          type: boolean
+        reason:
+          type: string
+        missing_dependencies:
+          type: array
+          items:
+            type: string
+        conflicting_services:
+          type: array
+          items:
+            type: string
+
+    CanRemoveResponse:
+      type: object
+      required: [allowed, cascade_remove]
+      properties:
+        allowed:
+          type: boolean
+        cascade_remove:
+          type: array
+          items:
+            type: string
+        warning:
+          type: string
+
+    CreatePackageRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        service_ids:
+          type: array
+          items:
+            type: string
+
+    UpdatePackageRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        service_ids:
+          type: array
+          items:
+            type: string
+
+    ValidateRequest:
+      type: object
+      properties:
+        service_ids:
+          type: array
+          items:
+            type: string
+
+    PriceRequest:
+      type: object
+      properties:
+        service_ids:
+          type: array
+          items:
+            type: string
+
+    CanAddRemoveRequest:
+      type: object
+      properties:
+        current_service_ids:
+          type: array
+          items:
+            type: string
+
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+        validation:
+          $ref: '#/components/schemas/ValidationResult'

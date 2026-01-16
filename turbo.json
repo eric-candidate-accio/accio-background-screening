@@ -1,0 +1,52 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "setup": {
+      "cache": false
+    },
+    "generate-types": {
+      "cache": false,
+      "outputs": ["src/generated/**"]
+    },
+    "build": {
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "dependsOn": ["^build"],
+      "outputs": [
+        "build/**",
+        ".vercel/**",
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**"
+      ]
+    },
+    "test": {
+      "outputs": ["coverage/**"],
+      "dependsOn": []
+    },
+    "@repo/e2e#test": {
+      "cache": false,
+      "outputs": ["playwright-report/**", "test-results/**"],
+      "dependsOn": []
+    },
+    "lint": {
+      "dependsOn": ["^build"]
+    },
+    "check-types": {
+      "dependsOn": ["^build"]
+    },
+    "dev": {
+      "dependsOn": ["setup"],
+      "cache": false,
+      "persistent": true
+    },
+    "@repo/api#dev": {
+      "dependsOn": ["setup"],
+      "cache": false,
+      "persistent": false
+    },
+    "clean": {
+      "cache": false
+    }
+  }
+}

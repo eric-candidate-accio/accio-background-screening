@@ -1,0 +1,84 @@
+{
+  "services": [
+    {
+      "id": "state_criminal",
+      "name": "State Criminal Search",
+      "base_price": 15.0,
+      "category": "criminal",
+      "dependencies": [],
+      "conflicts": []
+    },
+    {
+      "id": "county_criminal",
+      "name": "County Criminal Search",
+      "base_price": 25.0,
+      "category": "criminal",
+      "dependencies": ["state_criminal"],
+      "conflicts": []
+    },
+    {
+      "id": "federal_criminal",
+      "name": "Federal Criminal Search",
+      "base_price": 30.0,
+      "category": "criminal",
+      "dependencies": ["state_criminal"],
+      "conflicts": []
+    },
+    {
+      "id": "national_criminal",
+      "name": "National Criminal Database",
+      "base_price": 40.0,
+      "category": "criminal",
+      "dependencies": [],
+      "conflicts": []
+    },
+    {
+      "id": "employment_verification",
+      "name": "Employment Verification",
+      "base_price": 35.0,
+      "category": "verification",
+      "dependencies": [],
+      "conflicts": []
+    },
+    {
+      "id": "education_verification",
+      "name": "Education Verification",
+      "base_price": 35.0,
+      "category": "verification",
+      "dependencies": [],
+      "conflicts": []
+    },
+    {
+      "id": "professional_license",
+      "name": "Professional License Verification",
+      "base_price": 30.0,
+      "category": "verification",
+      "dependencies": [],
+      "conflicts": []
+    },
+    {
+      "id": "mvr",
+      "name": "Motor Vehicle Report (MVR)",
+      "base_price": 20.0,
+      "category": "driving",
+      "dependencies": [],
+      "conflicts": []
+    },
+    {
+      "id": "drug_test_5_panel",
+      "name": "Drug Test (5-Panel)",
+      "base_price": 45.0,
+      "category": "drug_screening",
+      "dependencies": [],
+      "conflicts": ["drug_test_10_panel"]
+    },
+    {
+      "id": "drug_test_10_panel",
+      "name": "Drug Test (10-Panel)",
+      "base_price": 65.0,
+      "category": "drug_screening",
+      "dependencies": [],
+      "conflicts": ["drug_test_5_panel"]
+    }
+  ]
+}

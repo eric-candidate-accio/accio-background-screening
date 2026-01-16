@@ -1,0 +1,44 @@
+.DS_Store
+node_modules
+.turbo
+*.log
+.next
+dist
+dist-ssr
+*.local
+.env
+.cache
+server/dist
+public/dist
+pnpm-lock.yaml
+.pnpm-store
+
+# Ruby
+Gemfile.lock
+.bundle
+vendor/bundle
+
+# Generated files
+apps/api/openapi.json
+packages/api/src/generated/api.ts
+
+
+# Playwright
+playwright-report/
+test-results/
+
+# Lock files (using pnpm)
+package-lock.json
+
+# TypeScript
+*.tsbuildinfo
+
+# IDE
+.idea/
+.vscode/
+
+# Vercel
+.vercel
+
+# OS
+Thumbs.db
