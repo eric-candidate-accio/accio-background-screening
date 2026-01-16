@@ -70,13 +70,6 @@ export function ServiceCard({
               {formatPrice(service.base_price)}
             </p>
 
-            {/* Dependencies indicator */}
-            {service.dependencies.length > 0 && (
-              <p className="text-xs text-muted-foreground mt-1">
-                Requires: {service.dependencies.join(", ")}
-              </p>
-            )}
-
             {/* Block reason - show for unselected or invalid selections */}
             {blockReason && (!isSelected || isInvalidSelection) && (
               <div className={cn(
