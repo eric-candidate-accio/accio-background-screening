@@ -2,7 +2,7 @@
   "name": "background screening package builder",
   "private": true,
   "scripts": {
-    "setup": "turbo run setup",
+    "postinstall": "turbo run setup",
     "build": "turbo run build",
     "clean": "turbo run clean",
     "dev": "turbo run dev",

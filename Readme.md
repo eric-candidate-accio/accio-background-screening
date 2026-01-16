@@ -36,12 +36,11 @@ A monorepo containing a Next.js web application and a Ruby Sinatra API for build
 ## Setup
 
 ```bash
-# Install Node dependencies
+# Install all dependencies (Node packages + Ruby gems)
 pnpm install
-
-# Install Ruby gems for the API
-pnpm setup
 ```
+
+> **Note:** Ruby gems are installed automatically via `postinstall`. Make sure you have Ruby 3.2+ available (via rbenv).
 
 ## Development
 
@@ -58,11 +57,11 @@ pnpm dev:api   # Sinatra on http://localhost:4567
 
 | Command | Description |
 |---------|-------------|
+| `pnpm install` | Install all dependencies (Node + Ruby gems via postinstall) |
 | `pnpm dev` | Run all apps in development mode |
 | `pnpm dev:web` | Run only the Next.js web app |
 | `pnpm dev:api` | Run only the Sinatra API |
 | `pnpm build` | Build all apps |
-| `pnpm setup` | Install Ruby gems for the API |
 | `pnpm lint` | Run linters across all apps |
 | `pnpm test:e2e` | Run Playwright end-to-end tests |
 | `pnpm clean` | Clean build artifacts |
@@ -224,7 +223,7 @@ Next.js 16 application with React 19, TypeScript, and Tailwind CSS.
 - `/packages` - Saved Packages list
 
 **Configuration:**
-- Create `.env.local` with `NEXT_PUBLIC_API_URL=http://localhost:4567`
+- `.env.local` is included with `NEXT_PUBLIC_API_URL=http://localhost:4567`
 
 ### API (`apps/api`)
 
@@ -244,6 +243,8 @@ See [`apps/api/README.md`](apps/api/README.md) for detailed API documentation.
 ## Environment Variables
 
 ### Web App (`apps/web/.env.local`)
+
+The `.env.local` file is committed to the repository for ease of setup:
 
 ```bash
 NEXT_PUBLIC_API_URL=http://localhost:4567
