@@ -1,0 +1,36 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "setup": "echo 'Web app ready'",
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf .next .turbo"
+  },
+  "dependencies": {
+    "@repo/api": "workspace:*",
+    "@repo/ui": "workspace:*",
+    "@repo/layout": "workspace:*",
+    "@repo/builder": "workspace:*",
+    "@repo/packages": "workspace:*",
+    "@tanstack/react-query": "^5.64.0",
+    "lucide-react": "^0.460.0",
+    "next": "16.1.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.1",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

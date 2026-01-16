@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "setup": "bundle install",
-    "dev": "bundle exec ruby myapp.rb",
+    "setup": "eval \"$(rbenv init -)\" && bundle install",
+    "dev": "eval \"$(rbenv init -)\" && bundle exec ruby myapp.rb",
     "build": "echo 'No build step for Ruby'",
-    "start": "bundle exec ruby myapp.rb -e production",
-    "lint": "bundle exec rubocop || true"
+    "start": "eval \"$(rbenv init -)\" && bundle exec ruby myapp.rb -e production",
+    "lint": "eval \"$(rbenv init -)\" && bundle exec rubocop || true"
   }
 }
